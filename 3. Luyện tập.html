@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>Luyện tập | Toán 3 – Bài 32 | YooBook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#195856; --brand-dark:#0f3f3d; --brand-light:#2f827d; --brand-soft:#e6f0ee;
+  --ink:#10302d; --muted:#5f8b89; --line:#dbe8e5; --gold:#a8814a;
+  --ok:#6fa85b; --ok-soft:#e8f3e3; --bad:#c96a4f; --bad-soft:#fbece7; --r:16px; --r-sm:11px;
+  --sh-1:0 1px 2px rgba(13,42,40,.05);
+  --sh-2:0 2px 6px rgba(13,42,40,.06),0 18px 34px -22px rgba(13,42,40,.45);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{font-family:'Roboto',system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.5;color:var(--ink);background:#195658;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column}
+.btn{border:0;cursor:pointer;font-weight:700;font-size:15px;color:#fff;background:var(--brand);border-radius:99px;padding:11px 26px;box-shadow:0 8px 18px -8px rgba(15,63,61,.7);transition:transform .15s,background .15s}
+.btn:hover{background:var(--brand-light);transform:translateY(-1px)}
+.btn.alt{background:#fff;color:var(--brand-dark);border:1.5px solid var(--brand);box-shadow:none}
+.btn.alt:hover{background:var(--brand-soft)}
+
+/* topbar */
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--sh-1);flex:0 0 auto}
+.logoclip{height:27px;display:flex;align-items:center;flex:0 0 auto}.logo{height:27px;display:block}
+.titles{flex:1;min-width:0}
+.badge{display:inline-block;max-width:100%;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);border-radius:99px;padding:2px 9px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titles h1{margin:0;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;gap:8px;flex:0 0 auto}
+.tb-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--brand-dark);transition:background .15s,border-color .15s}
+.tb-btn:hover{background:var(--brand-soft);border-color:var(--brand-light)}
+.tb-btn svg{width:18px;height:18px}
+
+.main{flex:1;min-height:0;padding:14px;display:flex}
+.frame{flex:1;min-width:0;background:#fff;border-radius:var(--r);box-shadow:var(--sh-2);display:flex;flex-direction:column;overflow:hidden}
+.stage{position:relative;flex:1;min-height:0;overflow:auto;background:radial-gradient(ellipse at 50% 38%,#2f827d 0,#195856 62%,#0f3f3d 100%);display:flex;padding:18px}
+.stage>section{margin:auto}
+
+/* thẻ câu hỏi */
+.q{width:min(100%,820px);background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:var(--r);padding:20px 24px 22px;box-shadow:0 10px 30px -12px rgba(13,42,40,.45);animation:up .35s}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+.qtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lvl{font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 10px;background:var(--brand-soft);color:var(--brand-dark)}
+.lvl.l2{background:#fff3da;color:#8a6420}.lvl.l3{background:#fbe6e0;color:#a2462f}
+.dots{margin-left:auto;display:flex;gap:5px}
+.dots i{width:11px;height:11px;border-radius:50%;background:var(--line);transition:background .2s,transform .2s}
+.dots i.cur{background:var(--brand-light);transform:scale(1.25)}
+.dots i.ok{background:var(--ok)}.dots i.miss{background:var(--gold)}
+.q h2{margin:12px 0 14px;font-size:clamp(18px,2.7vw,25px);line-height:1.35;font-weight:700;color:var(--brand-dark)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:13px;text-align:left;padding:12px 14px;border:2px solid var(--line);background:#fff;border-radius:var(--r);cursor:pointer;font-size:clamp(14px,1.9vw,17px);font-weight:500;color:var(--ink);transition:transform .15s,border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--brand-light);transform:translateY(-1px)}
+.opt b{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--brand-soft);color:var(--brand-dark);display:flex;align-items:center;justify-content:center;font-size:15px}
+.opt .mk{margin-left:auto;flex:0 0 auto;font-weight:800;font-size:18px}
+.opt[disabled]{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok b{background:var(--ok);color:#fff}.opt.ok .mk{color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft);animation:shake .35s}
+.opt.bad b{background:var(--bad);color:#fff}.opt.bad .mk{color:var(--bad)}
+.opt.dim{opacity:.55}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fb{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:44px}
+.fb p{margin:0;font-weight:600;font-size:15px;flex:1;min-width:200px}
+.fb p.ok{color:#43782f}.fb p.bad{color:#a2462f}
+.q h2 .box{display:inline-block;min-width:44px;padding:0 8px;border:2px solid #f3c64f;border-radius:8px;text-align:center;color:#b07a00;background:#fffaf0}
+.fig{display:flex;justify-content:center;margin:-4px 0 12px}.fig svg{max-width:100%;height:auto}
+/* khung câu hỏi phủ kín màn hình, chữ to cho HS lớp 3 */
+.stage{padding:16px 64px}.stage>section{margin:0;width:100%;max-width:none}
+.q{min-height:100%;display:flex;flex-direction:column;padding:26px 34px}
+.kicker{font-size:14px}.lvl{font-size:14px;padding:3px 12px}.dots i{width:14px;height:14px}
+.q h2{font-size:clamp(26px,3.4vw,40px);margin:14px 0 18px}
+.opts{flex:1;justify-content:center;gap:14px}
+.opt{font-size:clamp(20px,2.5vw,30px);padding:16px 20px;gap:16px}
+.opt b{width:48px;height:48px;font-size:21px}.opt .mk{font-size:26px}
+.fb{min-height:60px}.fb p{font-size:21px}.btn{font-size:19px;padding:13px 30px}
+.fig svg{width:300px}.res .big{font-size:clamp(60px,10vw,96px)}.res p.msg{font-size:18px}.lv div strong{font-size:28px}.lv div span{font-size:15px}
+@media (max-width:640px){.stage{padding:10px}.q{padding:16px}.fig svg{width:220px}}
+
+/* kết quả */
+.res{text-align:center}
+.res .big{font-size:clamp(46px,9vw,76px);font-weight:800;color:var(--brand);line-height:1;margin:6px 0}
+.res .big small{font-size:.4em;color:var(--muted);font-weight:700}
+.res h2{margin:6px 0 4px}
+.res p.msg{margin:0 auto 14px;color:var(--muted);max-width:480px}
+.lv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 18px}
+.lv div{background:var(--brand-soft);border-radius:var(--r-sm);padding:10px 8px}
+.lv div strong{display:block;font-size:22px;color:var(--brand-dark)}
+.lv div span{font-size:12.5px;font-weight:600;color:var(--muted)}
+.res .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+@media (max-width:640px){.main{padding:8px}.stage{padding:10px}.q{padding:16px}.titles h1{font-size:16px}.dots{margin-left:0;width:100%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="logoclip"><img class="logo" alt="YooBook" src="data:image/png;base64,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
+"></div>
+    <div class="titles">
+      <div class="badge">Toán 3 · Mi-li-lít</div>
+      <h1>Luyện tập</h1>
+    </div>
+    <div class="tb-right">
+      <button class="tb-btn" id="btnMute" type="button" aria-label="Tắt âm thanh" aria-pressed="false">🔊</button>
+      <button class="tb-btn" id="btnFs" type="button" aria-label="Toàn màn hình"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </header>
+  <div class="main"><div class="frame"><div class="stage" id="stage"></div></div></div>
+</div>
+<script>
+(function(){
+'use strict';
+var LEVELS={1:'Nhận biết',2:'Thông hiểu',3:'Vận dụng'};
+var QS=[
+ {lv:1,q:'Mi-li-lít viết tắt là:',o:['l','ml','m'],a:1},
+ {lv:1,q:'1 l = <span class="box">?</span> ml',o:['100','10','1&nbsp;000'],a:2},
+ {lv:1,q:'Ca có bao nhiêu nước?',fig:'<svg viewBox="0 0 240 190" width="220" height="174" role="img" aria-label="Ca 1 l có nước"><path d="M168,40 C205,40 205,140 168,138" fill="none" stroke="#a9cdd8" stroke-width="10" stroke-linecap="round"/><clipPath id="cj"><path d="M60,10 H170 V164 Q170,176 158,176 H72 Q60,176 60,164 Z"/></clipPath><path d="M60,10 H170 V164 Q170,176 158,176 H72 Q60,176 60,164 Z" fill="#fff"/><rect x="58" y="67.0" width="116" height="113.0" fill="#5ab4e8" clip-path="url(#cj)"/><line x1="62" x2="78" y1="157.0" y2="157.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="142.0" y2="142.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="127.0" y2="127.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="112.0" y2="112.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="92" y1="97.0" y2="97.0" stroke="#22495a" stroke-width="2.4"/><line x1="62" x2="78" y1="82.0" y2="82.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="67.0" y2="67.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="52.0" y2="52.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="78" y1="37.0" y2="37.0" stroke="#22495a" stroke-width="1.8"/><line x1="62" x2="92" y1="22.0" y2="22.0" stroke="#22495a" stroke-width="2.4"/><text x="96" y="102.0" font-size="13" font-weight="700" fill="#22495a">500 ml</text><text x="96" y="27.0" font-size="13" font-weight="700" fill="#22495a">1 l</text><path d="M60,10 H170 V164 Q170,176 158,176 H72 Q60,176 60,164 Z" fill="none" stroke="#8fb7c4" stroke-width="3"/><line x1="55" x2="175" y1="10" y2="10" stroke="#8fb7c4" stroke-width="5" stroke-linecap="round"/></svg>',o:['700 ml','600 ml','800 ml'],a:0},
+ {lv:1,q:'Nước <b>ít hơn 1 l</b> đo bằng:',o:['kg','ml','cm'],a:1},
+ {lv:2,q:'120 ml − 20 ml = <span class="box">?</span>',o:['140 ml','100 ml','120 ml'],a:1},
+ {lv:2,q:'12 ml × 3 = <span class="box">?</span>',o:['15 ml','32 ml','36 ml'],a:2},
+ {lv:2,q:'300 ml + 200 ml = <span class="box">?</span>',o:['500 ml','100 ml','5 ml'],a:0},
+ {lv:2,q:'40 ml : 4 = <span class="box">?</span>',o:['36 ml','10 ml','44 ml'],a:1},
+ {lv:2,q:'1 l <span class="box">?</span> 900 ml',o:['&gt;','&lt;','='],a:0},
+ {lv:3,q:'🍳 Chai có 750 ml dầu. Mẹ nấu ăn xong, còn 350 ml. Mẹ đã dùng bao nhiêu?',o:['1&nbsp;100 ml','300 ml','400 ml'],a:2},
+ {lv:3,q:'🥛 Lan uống 2 hộp sữa, mỗi hộp 180 ml. Lan uống bao nhiêu?',o:['360 ml','182 ml','90 ml'],a:0},
+ {lv:3,q:'🫗 Bình có 1 l. Rót ra 4 cốc, mỗi cốc 200 ml. Bình còn bao nhiêu?',o:['800 ml','200 ml','600 ml'],a:1}
+];
+var $=function(id){return document.getElementById(id)};
+var stage=$('stage'), muted=false;
+
+/* âm thanh phản hồi */
+var ctx=null;
+function tone(f,t0,d,type,vol){ if(muted) return; try{ ctx=ctx||new (window.AudioContext||window.webkitAudioContext)(); if(ctx.state==='suspended') ctx.resume();
+  var o=ctx.createOscillator(),g=ctx.createGain(),s=ctx.currentTime+t0; o.type=type||'sine'; o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,s); g.gain.exponentialRampToValueAtTime(vol||.12,s+.015); g.gain.exponentialRampToValueAtTime(.0001,s+d);
+  o.connect(g); g.connect(ctx.destination); o.start(s); o.stop(s+d+.02); }catch(e){} }
+var sfx={ok:function(){tone(523,0,.14,'sine',.13);tone(659,.1,.14,'sine',.13);tone(784,.2,.26,'sine',.13)},
+         no:function(){tone(220,0,.16,'square',.07);tone(165,.13,.26,'square',.07)},
+         end:function(){[523,659,784,1047].forEach(function(f,i){tone(f,i*.11,.22,'sine',.12)})}};
+
+var cur=0, res=[] /* 1 = đúng ngay lần đầu, 0 = phải thử lại */, tried=false, solved=false;
+var LET=['A','B','C'];
+
+function dots(){ return QS.map(function(_,i){ return '<i class="'+(i===cur?'cur':(res[i]===1?'ok':(res[i]===0?'miss':'')))+'"></i>'}).join(''); }
+
+function render(){
+  var q=QS[cur]; tried=false; solved=false;
+  stage.innerHTML='<section class="q" aria-live="polite">'+
+    '<div class="qtop"><span class="kicker">Câu '+(cur+1)+'/'+QS.length+'</span><span class="lvl l'+q.lv+'">'+LEVELS[q.lv]+'</span><div class="dots" aria-hidden="true">'+dots()+'</div></div>'+
+    '<h2>'+q.q+'</h2>'+(q.fig?'<div class="fig">'+q.fig+'</div>':'')+
+    '<div class="opts" role="group">'+q.o.map(function(t,i){ return '<button class="opt" type="button" data-i="'+i+'"><b>'+LET[i]+'</b><span>'+t+'</span><span class="mk"></span></button>'}).join('')+'</div>'+
+    '<div class="fb" id="fb"></div></section>';
+  stage.querySelectorAll('.opt').forEach(function(b){ b.onclick=function(){ pick(+b.dataset.i,b) } });
+}
+
+function pick(i,btn){
+  if(solved||btn.disabled) return;
+  var q=QS[cur], fb=$('fb');
+  if(i===q.a){
+    solved=true; if(res[cur]===undefined) res[cur]=tried?0:1;
+    btn.classList.add('ok'); btn.querySelector('.mk').textContent='✓';
+    stage.querySelectorAll('.opt').forEach(function(b){ b.disabled=true; if(b!==btn) b.classList.add('dim'); });
+    sfx.ok();
+    var last=cur===QS.length-1;
+    fb.innerHTML='<p class="ok">'+(tried?'Đúng rồi! Em đã tìm ra đáp án.':'Chính xác! Giỏi lắm!')+'</p><button class="btn" id="nx" type="button">'+(last?'Xem kết quả':'Câu tiếp theo ▶')+'</button>';
+    stage.querySelector('.dots').innerHTML=dots();
+    $('nx').onclick=function(){ if(last){ cur=QS.length; result(); } else { cur++; render(); } };
+    $('nx').focus({preventScroll:true});
+  } else {
+    tried=true; res[cur]=0;
+    btn.classList.add('bad'); btn.querySelector('.mk').textContent='✗'; btn.disabled=true;
+    sfx.no();
+    fb.innerHTML='<p class="bad">Chưa đúng rồi, em thử lại nhé!</p>';
+    stage.querySelector('.dots').innerHTML=dots();
+  }
+}
+
+function result(){
+  var total=res.filter(function(v){return v===1}).length, by={1:[0,0],2:[0,0],3:[0,0]};
+  QS.forEach(function(q,i){ by[q.lv][1]++; if(res[i]===1) by[q.lv][0]++; });
+  var msg= total===QS.length?'Tuyệt vời! Em trả lời đúng tất cả các câu ngay từ lần đầu.':
+           total>=9?'Rất tốt! Em đã nắm vững kiến thức về mi-li-lít.':
+           total>=6?'Khá lắm! Em xem lại các bài học để nhớ kĩ hơn nhé.':'Cố gắng lên! Em hãy xem lại các phần học và làm lại để đạt kết quả tốt hơn nhé.';
+  stage.innerHTML='<section class="q res"><div class="kicker">Kết quả luyện tập</div><h2>Hoàn thành 12 câu hỏi!</h2>'+
+    '<div class="big">'+total+'<small> / '+QS.length+'</small></div><p class="msg">'+msg+'<br><small>Điểm tính theo số câu đúng ngay từ lần chọn đầu tiên.</small></p>'+
+    '<div class="lv">'+[1,2,3].map(function(l){ return '<div><strong>'+by[l][0]+'/'+by[l][1]+'</strong><span>'+LEVELS[l]+'</span></div>'}).join('')+'</div>'+
+    '<div class="row"><button class="btn" id="again" type="button">↻ Làm lại</button></div></section>';
+  sfx.end();
+  $('again').onclick=function(){ cur=0; res=[]; render(); };
+}
+
+$('btnMute').onclick=function(e){ muted=!muted; e.currentTarget.textContent=muted?'🔇':'🔊'; e.currentTarget.setAttribute('aria-pressed',muted); };
+$('btnFs').onclick=function(){ var el=document.documentElement; if(!document.fullscreenElement) (el.requestFullscreen||function(){}).call(el); else document.exitFullscreen(); };
+render();
+})();
+</script>
+</body>
+</html>

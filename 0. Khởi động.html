@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<title>Khởi động | Toán 3 – Bài 32 | YooBook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#195856; --brand-dark:#0f3f3d; --brand-light:#2f827d; --brand-soft:#e6f0ee;
+  --ink:#10302d; --muted:#5f8b89; --line:#dbe8e5; --gold:#a8814a;
+  --ok:#6fa85b; --bad:#c96a4f; --r:16px; --r-sm:11px;
+  --sh-1:0 1px 2px rgba(13,42,40,.05);
+  --sh-2:0 2px 6px rgba(13,42,40,.06),0 18px 34px -22px rgba(13,42,40,.45);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{font-family:'Roboto',system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.5;color:var(--ink);background:#195658;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column}
+
+/* intro */
+.intro{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#2f827d 0,#195856 55%,#0b2a29 100%);transition:opacity .4s}
+.intro::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.22) 56%,rgba(0,0,0,.42));pointer-events:none}
+.intro.gone{opacity:0;pointer-events:none}
+.intro-inner{position:relative;z-index:2;width:100%;max-width:920px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;color:#fff}
+.intro-card{width:min(92vw,980px);padding:8px 12px 12px;text-align:center}
+.intro-kicker{font-size:12px;font-weight:700;letter-spacing:.20em;text-transform:uppercase;color:rgba(248,252,252,.92)}
+.intro-card h1{font-size:clamp(30px,5vw,58px);margin:10px 0 12px;color:#fff;line-height:1.1;font-weight:800;text-shadow:0 4px 18px rgba(0,0,0,.26)}
+.intro-sub{max-width:720px;margin:0 auto 26px;font-size:clamp(13px,1.6vw,18px);line-height:1.7;color:rgba(244,249,249,.96);text-shadow:0 2px 10px rgba(0,0,0,.22)}
+.intro-progress{width:min(410px,72vw);height:3px;margin:0 auto 14px;border-radius:99px;background:rgba(255,255,255,.36);overflow:hidden;transition:opacity .3s}
+.intro-progress span{display:block;height:100%;width:0;background:#d7e779;transition:width .25s linear}
+#introStatus{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.ready-dot{width:8px;height:8px;border-radius:99px;background:#d7e779;display:inline-block;margin-right:7px;box-shadow:0 0 10px rgba(215,231,121,.6)}
+.intro-explore{margin:20px auto 0;width:min(280px,88vw);padding:14px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.16);cursor:pointer;background:rgba(21,92,88,.76);box-shadow:0 16px 42px -20px rgba(0,0,0,.6);color:#fff;font-weight:700;font-size:15px;letter-spacing:.02em;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .28s,transform .28s,background .2s}
+.intro.ready .intro-explore{opacity:1;transform:none;pointer-events:auto}
+.intro.ready .intro-progress{opacity:0}
+.intro-explore:hover{background:rgba(21,92,88,.92)}
+.intro-credit{margin-top:20px;color:rgba(255,255,255,.88);font-size:12px}
+.btn{border:0;cursor:pointer;font-weight:700;font-size:15px;color:#fff;background:var(--brand);border-radius:99px;padding:11px 26px;box-shadow:0 8px 18px -8px rgba(15,63,61,.7);transition:transform .15s,background .15s}
+.btn:hover{background:var(--brand-light);transform:translateY(-1px)}
+.btn.alt{background:#fff;color:var(--brand-dark);border:1.5px solid var(--brand);box-shadow:none}
+.btn.alt:hover{background:var(--brand-soft)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+
+/* topbar */
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--sh-1);flex:0 0 auto}
+.logoclip{height:27px;display:flex;align-items:center;flex:0 0 auto}.logo{height:27px;display:block}
+.titles{flex:1;min-width:0}
+.badge{display:inline-block;max-width:100%;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);border-radius:99px;padding:2px 9px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titles h1{margin:0;font-size:18px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;gap:8px;flex:0 0 auto}
+.tb-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--brand-dark);transition:background .15s,border-color .15s}
+.tb-btn:hover{background:var(--brand-soft);border-color:var(--brand-light)}
+.tb-btn svg{width:18px;height:18px}
+
+.main{flex:1;min-height:0;padding:14px;display:flex}
+.frame{flex:1;min-width:0;background:#fff;border-radius:var(--r);box-shadow:var(--sh-2);display:flex;flex-direction:column;overflow:hidden}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#2f827d 0,#195856 62%,#0f3f3d 100%)}
+.pane{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0}
+#pane1{z-index:20;padding:18px 62px}
+.steps{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;border-top:1px solid var(--line);scrollbar-width:none;flex:0 0 auto}
+.steps::-webkit-scrollbar{display:none}
+.vignette{position:absolute;inset:0;z-index:1;pointer-events:none;box-shadow:inset 0 0 90px rgba(15,63,61,.10)}
+.stage-nav{position:absolute;top:50%;z-index:30;transform:translateY(-50%);width:38px;height:38px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(8px) saturate(1.3);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--brand-dark);box-shadow:var(--sh-1);font-size:16px}
+.stage-nav:hover{background:var(--brand-soft)}
+.stage-nav.prev{left:12px}.stage-nav.next{right:12px}.stage-nav[disabled]{opacity:.3;pointer-events:none}
+.stage-tools{position:absolute;left:12px;top:12px;z-index:12}
+.ghost{background:rgba(255,255,255,.9);backdrop-filter:blur(8px) saturate(1.3);border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 11px;font-size:12.5px;font-weight:500;color:var(--brand-dark);cursor:pointer;box-shadow:var(--sh-1)}
+.ghost:hover{background:var(--brand-soft)}
+.step{flex:0 0 auto;white-space:nowrap;display:flex;align-items:center;gap:7px;padding:7px 14px 7px 8px;border-radius:99px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:var(--ink)}
+.step:hover{border-color:var(--brand-light)}
+.step b{width:20px;height:20px;border-radius:99px;background:var(--brand-soft);color:var(--brand-dark);font-size:11px;display:flex;align-items:center;justify-content:center}
+.step[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.step[aria-pressed="true"] b{background:rgba(255,255,255,.25);color:#fff}
+.step.done b{background:var(--brand);color:#fff}
+.step.is-locked{opacity:.42;filter:saturate(.35);pointer-events:none}
+.step.is-locked::after{content:"Khóa";margin-left:2px;font-size:11px;color:var(--muted)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(25,88,86,.4)}50%{box-shadow:0 0 0 7px rgba(25,88,86,0)}}
+.step.just{animation:pulse 1.2s ease 2}
+
+/* ===== video dựng bằng HTML/SVG ===== */
+.player{position:absolute;inset:0;overflow:hidden;background:#0b2a29;display:flex;align-items:center;justify-content:center}
+.film{width:100%;height:100%;display:block}
+.film .sc{opacity:0;transition:opacity .6s}
+.film .sc.on{opacity:1}
+.cap{position:absolute;left:0;right:0;bottom:64px;text-align:center;z-index:5;padding:0 6%;pointer-events:none}
+.cap span{display:inline-block;background:rgba(15,63,61,.88);color:#fff;font-weight:700;font-size:clamp(15px,2.4vw,24px);line-height:1.35;padding:8px 20px;border-radius:18px;transition:opacity .3s}
+.cap span:empty{opacity:0}
+.ctrl{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;align-items:center;gap:10px;padding:10px 62px 12px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.ctrl button{width:36px;height:36px;border-radius:99px;border:0;background:rgba(255,255,255,.92);cursor:pointer;color:var(--brand-dark);font-size:13px;flex:0 0 auto}
+.bar{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.35);overflow:hidden;cursor:pointer}
+.bar i{display:block;height:100%;width:0;background:#ffd98a}
+.time{color:#fff;font-size:12px;font-variant-numeric:tabular-nums;flex:0 0 auto}
+.start-ov{position:absolute;inset:0;z-index:7;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);cursor:pointer}
+.start-ov div{width:76px;height:76px;border-radius:50%;background:#fff;color:var(--brand);font-size:32px;display:flex;align-items:center;justify-content:center;padding-left:6px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.vq{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;padding:18px 62px 70px;background:rgba(11,42,41,.45);backdrop-filter:blur(3px);animation:up .4s}
+.vq-card{width:min(100%,560px);background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 10px 30px -12px rgba(13,42,40,.45);padding:20px 22px;text-align:center}
+.vq-card h2{margin:6px 0 16px;font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--brand-dark)}
+.vq-card .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pulse{animation:svgPulse 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes svgPulse{50%{opacity:.35}}
+
+/* ===== hỏi đáp ===== */
+#pane1{background:rgba(11,42,41,.55);backdrop-filter:blur(4px)}
+.qa{width:min(100%,820px);max-height:100%;overflow:auto;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:0 10px 30px -12px rgba(13,42,40,.45)}
+.kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.card{position:relative;display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border:2px solid var(--line);background:#fff;border-radius:var(--r);cursor:pointer;font-size:15px;font-weight:500;color:var(--ink);transition:transform .15s,border-color .15s,background .15s}
+.card:hover{border-color:var(--brand-light);transform:translateY(-2px)}
+.card .ic{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:26px}
+.card .ck{margin-left:auto;flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.card[aria-pressed="true"]{border-color:var(--brand);background:#f1f9f7}
+.card[aria-pressed="true"] .ck{background:var(--brand);border-color:var(--brand)}
+.qimg{display:flex;justify-content:center;margin:6px 0 4px}
+.other{margin-top:12px}
+.other label{font-weight:600;font-size:13.5px;color:var(--brand-dark)}
+.other textarea{display:block;width:100%;margin-top:4px;border:2px solid var(--line);border-radius:var(--r-sm);padding:9px 12px;font:inherit;resize:none;min-height:56px;outline:none}
+.other textarea:focus{border-color:var(--brand-light)}
+.actions{margin-top:14px;display:flex;justify-content:flex-end;gap:10px}
+.fb{margin-top:14px;border-radius:var(--r);background:#f1f9f7;border:1.5px solid var(--brand-light);padding:14px 16px;animation:up .4s}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+.fb ul{margin:6px 0;padding-left:20px}
+.fb li{margin:2px 0}
+.fb .mine{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px}
+.fb .mine span{font-size:12.5px;font-weight:600;border-radius:99px;padding:2px 10px;background:#fff;border:1px solid var(--line)}
+.fb .note{background:#fff7e8;border-left:4px solid var(--gold);border-radius:8px;padding:7px 12px;font-size:13.5px;margin:8px 0}
+.fb .go{margin-top:10px;text-align:right}
+
+.toast{position:absolute;left:50%;bottom:56px;z-index:40;transform:translate(-50%,20px);background:var(--brand-dark);color:#fff;font-weight:600;padding:8px 18px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .cards{grid-template-columns:1fr}
+  .qa{padding:16px}
+  .main{padding:8px}
+  .titles h1{font-size:16px}
+  .ctrl{padding:8px 50px 10px}
+  .cap{bottom:56px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" aria-live="polite">
+  <div class="intro-inner">
+    <section class="intro-card" aria-labelledby="introTitle">
+      <div class="intro-kicker">Toán 3 · Khởi động</div>
+      <h1 id="introTitle">Mi-li-lít</h1>
+      <p class="intro-sub">Cùng xem video ngắn nhé! 🎬</p>
+      <div class="intro-progress" aria-hidden="true"><span id="introBar"></span></div>
+      <div id="introStatus"><span class="ready-dot"></span>Đang chuẩn bị bài học…</div>
+      <button class="intro-explore" id="btnBegin" type="button">Bắt đầu</button>
+    </section>
+    <div class="intro-credit">Được phát triển bởi <strong>YooBook</strong></div>
+  </div>
+</div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="logoclip"><img class="logo" alt="YooBook" src="data:image/png;base64,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"></div>
+    <div class="titles">
+      <div class="badge">Toán 3 · Mi-li-lít</div>
+      <h1>Khởi động</h1>
+    </div>
+    <div class="tb-right">
+      <button class="tb-btn" id="btnMute" type="button" aria-label="Tắt âm thanh" aria-pressed="false">🔊</button>
+      <button class="tb-btn" id="btnFs" type="button" aria-label="Toàn màn hình"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </header>
+
+  <div class="main"><div class="frame">
+    <div class="stage" id="stage">
+
+      <!-- Bước 1: video -->
+      <section class="pane" id="pane0" aria-label="Xem video">
+        <div class="player" id="player">
+          <svg class="film" id="film" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="cap"><span id="sub"></span></div>
+          <div class="ctrl">
+            <button id="pp" type="button" aria-label="Phát / tạm dừng">▶</button>
+            <button id="rw" type="button" aria-label="Xem lại từ đầu">↺</button>
+            <div class="bar" id="bar"><i id="fill"></i></div>
+            <span class="time" id="time">0:00 / 1:00</span>
+          </div>
+          <div class="start-ov" id="startOv"><div>▶</div></div>
+          <div class="vq" id="vq" hidden role="dialog" aria-live="polite">
+            <div class="vq-card">
+              <div class="kicker">🤔</div>
+              <h2>Vạch chia dùng để làm gì?</h2>
+              <div class="row"><button class="btn alt" id="vqReplay" type="button">↻ Xem lại video</button><button class="btn" id="vqGo" type="button">Tiếp tục ▶</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bước 2: hỏi đáp -->
+      <section class="pane" id="pane1" aria-label="Hỏi đáp" hidden>
+        <div class="qa">
+          <h2 style="margin:0;font-size:clamp(20px,3vw,26px);font-weight:700;color:var(--brand-dark)">Vạch chia trên cốc để làm gì?</h2>
+          <div class="qimg" id="qimg"></div>
+          <div class="cards" id="cards"></div>
+          <div class="other">
+            <label for="own">Ý kiến khác của em</label>
+            <textarea id="own" maxlength="200" placeholder="Em nghĩ…"></textarea>
+          </div>
+          <div class="actions"><button class="btn" id="btnSend" type="button" disabled>Gửi ý kiến</button></div>
+          <div class="fb" id="fb" hidden></div>
+        </div>
+      </section>
+
+      <div class="vignette" aria-hidden="true"></div>
+      <button class="stage-nav prev" id="btnPrev" type="button" aria-label="Bước trước">◀</button>
+      <button class="stage-nav next" id="btnNext" type="button" aria-label="Bước sau">▶</button>
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+    <div class="steps" id="steps" role="tablist" aria-label="Các bước khởi động"></div>
+  </div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let muted=false;
+
+/* ===== âm thanh ===== */
+const audio=(()=>{let ctx=null;
+  const ac=()=>{try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume()}catch(e){}return ctx};
+  const tone=(f,t,d,type,v)=>{const c=ac();if(!c||muted)return;const o=c.createOscillator(),g=c.createGain();o.type=type||'sine';o.frequency.value=f;
+    const s=c.currentTime+t;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(v||.08,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+d);
+    o.connect(g);g.connect(c.destination);o.start(s);o.stop(s+d+.03)};
+  return{click:()=>tone(660,0,.08,'triangle',.07),ok:()=>{tone(523,0,.13,'sine',.11);tone(659,.1,.13,'sine',.11);tone(784,.2,.25,'sine',.11)}}})();
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2200)}
+
+/* ---- thuyết minh: mã → link mp3 (xem thuyet-minh.json); để trống thì chỉ hiện phụ đề ---- */
+const VO={
+  '1.1':'https://assets.yoolife.com.vn/yootek/1794903763101-8347.mp3',
+  '1.2':'https://assets.yoolife.com.vn/yootek/1794903766959-1046.mp3',
+  '1.3':'https://assets.yoolife.com.vn/yootek/1794903770810-3571.mp3',
+  '1.4':'https://assets.yoolife.com.vn/yootek/1794903774667-3464.mp3',
+  '1.5':'https://assets.yoolife.com.vn/yootek/1794903778441-4621.mp3',
+  '1.6':'https://assets.yoolife.com.vn/yootek/1794903782463-5224.mp3',
+  '1.7':'https://assets.yoolife.com.vn/yootek/1794903786313-5616.mp3',
+  '1.8':'https://assets.yoolife.com.vn/yootek/1794903790380-2968.mp3',
+  '1.9':'https://assets.yoolife.com.vn/yootek/1794903794416-2599.mp3',
+  '1.10':'https://assets.yoolife.com.vn/yootek/1794903798233-7399.mp3',
+  '1.11':'https://assets.yoolife.com.vn/yootek/1794903802078-4100.mp3',
+  '1.12':'https://assets.yoolife.com.vn/yootek/1794903806020-6667.mp3',
+  '2.1':'https://assets.yoolife.com.vn/yootek/1794903810297-1872.mp3',
+  '2.2':'https://assets.yoolife.com.vn/yootek/1794903814442-4507.mp3'
+};
+const voice=new Audio();
+function stopVoice(){voice.pause();}
+function unlockVoice(){if(voice.src||!VO['1.1'])return;voice.muted=true;voice.src=VO['1.1'];voice.play().catch(()=>{});}
+function playVoice(id){stopVoice();if(muted||!VO[id])return;voice.muted=false;voice.src=VO[id];voice.currentTime=0;voice.play().catch(()=>{});}
+
+/* ===== các bước ===== */
+const STEPS=['Xem video','Hỏi đáp'];
+let cur=0,unlocked=STEPS.length-1,doneSet=new Set();
+const stepsEl=$('steps');
+function renderSteps(){
+  stepsEl.innerHTML='';
+  STEPS.forEach((n,i)=>{
+    const b=document.createElement('button');b.type='button';b.className='step'+(doneSet.has(i)?' done':'')+(i>unlocked?' is-locked':'');
+    b.setAttribute('role','tab');b.setAttribute('aria-pressed',i===cur);
+    b.innerHTML='<b>'+(doneSet.has(i)?'✓':i+1)+'</b>'+n;b.onclick=()=>go(i);stepsEl.appendChild(b)});
+}
+function go(i){
+  if(i>unlocked)return;cur=i;
+  $('pane1').hidden=i!==1;
+  $('btnPrev').disabled=i<=0;$('btnNext').disabled=i>=STEPS.length-1;
+  stopVoice();
+  if(i!==0)pause();
+  renderSteps();
+}
+$('btnPrev').onclick=()=>go(cur-1);$('btnNext').onclick=()=>go(cur+1);
+
+/* =====================================================================
+   Video dựng bằng SVG: 4 cảnh × 15 giây
+   ===================================================================== */
+const DUR=60, SC=15;
+const CUES=[
+  [0,'1.1','Buổi sáng, mẹ đang pha một bình sữa cho em bé.'],
+  [4.5,'1.2','Các em nhìn kìa, trên bình sữa có các vạch và con số.'],
+  [9,'1.3','Mẹ rót nước vừa đúng đến vạch 120.'],
+  [15,'1.4','Bạn nhỏ bị ho, cần uống thuốc siro cho mau khỏi.'],
+  [19.5,'1.5','Chiếc cốc đong nhỏ xíu này cũng có các vạch chia.'],
+  [24,'1.6','Mỗi lần uống, chỉ rót đúng 5 ml thôi nhé.'],
+  [30,'1.7','Còn đây là một chiếc cốc có chia vạch rất rõ ràng.'],
+  [34.5,'1.8','50, 100, 150, 200, 250.'],
+  [39,'1.9','Rót nước vào cốc, nước dâng lên đúng vạch 200.'],
+  [45,'1.10','Chiếc chai to này chứa được đúng 1 lít nước.'],
+  [49.5,'1.11','Vậy lượng nước ít hơn 1 lít thì đo bằng gì nhỉ?'],
+  [54,'1.12','Các vạch chia trên cốc dùng để làm gì nhỉ?'],
+];
+const film=$('film');
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,k)=>a+(b-a)*k;
+/* ---------- thư viện hình (chuỗi SVG) ---------- */
+const shadow=(cx,cy,rx,ry=rx*.16)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#shd)"/>`;
+const sparkle=(x,y,s=1,c='#ffd23f')=>`<path transform="translate(${x} ${y}) scale(${s})" d="M0,-16 L4,-4 L16,0 L4,4 L0,16 L-4,4 L-16,0 L-4,-4 Z" fill="${c}"/>`;
+/* phông: tường + gạch ốp + mặt bàn gỗ */
+function bg({wall,tile='#ffffff',top=440,win=null,deco=''}){
+  let s=`<rect width="960" height="540" fill="url(#${wall})"/>
+  <rect y="${top-150}" width="960" height="150" fill="url(#tiles)" opacity=".55"/>`;
+  if(win){const [x,y,w,h]=win;
+    s+=`<rect x="${x-10}" y="${y-10}" width="${w+20}" height="${h+20}" rx="14" fill="#fff" stroke="#e3d6c4" stroke-width="3"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="url(#sky)"/>
+    <circle cx="${x+w*.78}" cy="${y+h*.3}" r="${h*.13}" fill="#ffe27a"/>
+    <g fill="#fff" opacity=".95"><ellipse cx="${x+w*.3}" cy="${y+h*.35}" rx="${w*.14}" ry="${h*.08}"/><ellipse cx="${x+w*.4}" cy="${y+h*.3}" rx="${w*.1}" ry="${h*.09}"/></g>
+    <path d="M${x+w*.55},${y+h} q${w*.15},-${h*.35} ${w*.45},-${h*.25} v${h*.25} z" fill="#9fd88a"/>
+    <line x1="${x+w/2}" y1="${y}" x2="${x+w/2}" y2="${y+h}" stroke="#fff" stroke-width="7"/><line x1="${x}" y1="${y+h/2}" x2="${x+w}" y2="${y+h/2}" stroke="#fff" stroke-width="7"/>
+    <path d="M${x-26},${y-18} h${w*.32} q-${w*.08},${h*.6} -${w*.32},${h+30} z" fill="#f59ab0" opacity=".9"/>
+    <path d="M${x+w+26},${y-18} h-${w*.32} q${w*.08},${h*.6} ${w*.32},${h+30} z" fill="#f59ab0" opacity=".9"/>`;}
+  s+=deco;
+  s+=`<rect y="${top}" width="960" height="${540-top}" fill="url(#wood)"/>
+  <rect y="${top}" width="960" height="10" fill="#fff" opacity=".35"/>
+  <g stroke="#b9895a" stroke-width="2" opacity=".35" fill="none"><path d="M0,${top+40} q240,-10 480,0 t480,0"/><path d="M0,${top+75} q300,8 600,-2 t360,4"/></g>`;
+  return s;
+}
+/* gương mặt bạn nhỏ: mood = happy | sick | think | baby */
+function face(x,y,r,mood='happy',hair='#3b2a20'){
+  const eyeY=y+r*.08,ex=r*.36;
+  let eyes='',mouth='',extra='';
+  if(mood==='happy'||mood==='baby'){eyes=[-1,1].map(d=>`<ellipse cx="${x+d*ex}" cy="${eyeY}" rx="${r*.1}" ry="${r*.13}" fill="#2b1d16"/><circle cx="${x+d*ex+r*.04}" cy="${eyeY-r*.05}" r="${r*.04}" fill="#fff"/>`).join('');
+    mouth=`<path d="M${x-r*.22},${y+r*.38} Q${x},${y+r*.62} ${x+r*.22},${y+r*.38} Z" fill="#c4473a"/><path d="M${x-r*.1},${y+r*.5} Q${x},${y+r*.58} ${x+r*.1},${y+r*.5}" fill="#ff8f86"/>`;}
+  if(mood==='sick'){eyes=[-1,1].map(d=>`<path d="M${x+d*ex-r*.12},${eyeY} Q${x+d*ex},${eyeY+r*.09} ${x+d*ex+r*.12},${eyeY}" stroke="#2b1d16" stroke-width="${r*.05}" fill="none" stroke-linecap="round"/>`).join('');
+    mouth=`<path d="M${x-r*.16},${y+r*.48} q${r*.08},-${r*.08} ${r*.16},0 t${r*.16},0" stroke="#8d3b2f" stroke-width="${r*.05}" fill="none" stroke-linecap="round"/>`;
+    extra=`<g transform="translate(${x+r*.12} ${y+r*.46}) rotate(-25)"><rect x="0" y="-${r*.05}" width="${r*.85}" height="${r*.1}" rx="${r*.05}" fill="#fff" stroke="#9aa7ad" stroke-width="2"/><rect x="${r*.62}" y="-${r*.05}" width="${r*.23}" height="${r*.1}" rx="${r*.05}" fill="#e74c3c"/></g>
+      <path d="M${x+r*.55},${y-r*.55} q${r*.06},${r*.14} 0,${r*.2} q-${r*.06},-${r*.06} 0,-${r*.2}z" fill="#7cc6ee"/>`;}
+  if(mood==='think'){eyes=[-1,1].map(d=>`<ellipse cx="${x+d*ex}" cy="${eyeY}" rx="${r*.1}" ry="${r*.13}" fill="#2b1d16"/><circle cx="${x+d*ex+r*.04}" cy="${eyeY-r*.07}" r="${r*.045}" fill="#fff"/>`).join('')
+      +[-1,1].map(d=>`<path d="M${x+d*ex-r*.12},${eyeY-r*.26} q${r*.12},-${r*.08} ${r*.24},-${r*.02}" stroke="${hair}" stroke-width="${r*.05}" fill="none" stroke-linecap="round"/>`).join('');
+    mouth=`<ellipse cx="${x+r*.08}" cy="${y+r*.46}" rx="${r*.09}" ry="${r*.11}" fill="#c4473a"/>`;}
+  const back=mood==='baby'?'':`<circle cx="${x}" cy="${y-r*.12}" r="${r*1.06}" fill="${hair}"/>`;
+  const fringe=mood==='baby'
+    ?`<path d="M${x-r*.05},${y-r*.98} q${r*.3},-${r*.22} ${r*.18},${r*.12} q-${r*.08},${r*.1} -${r*.2},-${r*.02}" fill="none" stroke="#8a5a2b" stroke-width="${r*.07}" stroke-linecap="round"/>`
+    :`<path d="M${x-r*1.02},${y-r*.05} Q${x-r*.95},${y-r*1.15} ${x},${y-r*1.08} Q${x+r*.95},${y-r*1.15} ${x+r*1.02},${y-r*.05} Q${x+r*.6},${y-r*.62} ${x+r*.1},${y-r*.5} Q${x-r*.4},${y-r*.72} ${x-r*1.02},${y-r*.05} Z" fill="${hair}"/>`;
+  return `${back}<circle cx="${x-r}" cy="${y+r*.1}" r="${r*.2}" fill="#ffcfa8"/><circle cx="${x+r}" cy="${y+r*.1}" r="${r*.2}" fill="#ffcfa8"/>
+    <circle cx="${x}" cy="${y}" r="${r}" fill="url(#skin)"/>${fringe}${eyes}
+    <ellipse cx="${x-r*.58}" cy="${y+r*.34}" rx="${r*.17}" ry="${r*.1}" fill="${mood==='sick'?'#ff6b6b':'#ff9aa2'}" opacity="${mood==='sick'?.8:.6}"/>
+    <ellipse cx="${x+r*.58}" cy="${y+r*.34}" rx="${r*.17}" ry="${r*.1}" fill="${mood==='sick'?'#ff6b6b':'#ff9aa2'}" opacity="${mood==='sick'?.8:.6}"/>${mouth}${extra}`;
+}
+function body(x,y,r,color){return `<path d="M${x-r*1.15},${y+r*2.6} Q${x-r*1.2},${y+r*1.05} ${x},${y+r*.95} Q${x+r*1.2},${y+r*1.05} ${x+r*1.15},${y+r*2.6} Z" fill="${color}"/>
+  <path d="M${x-r*.35},${y+r*.98} Q${x},${y+r*1.3} ${x+r*.35},${y+r*.98}" fill="#fff" opacity=".85"/>`;}
+/* vạch chia */
+const ticks=(x,y0,k,from,to,step,major,lab,len=[14,26],fs=18)=>{let s='';for(let v=from;v<=to;v+=step){const y=y0-v*k,M=v%major===0;
+  s+=`<line x1="${x}" x2="${x+(M?len[1]:len[0])}" y1="${y}" y2="${y}" stroke="#22495a" stroke-width="${M?3:2}" stroke-linecap="round"/>`;
+  if(M&&lab){const t=lab(v);if(t!=='')s+=`<text x="${x+len[1]+6}" y="${y+6}" font-size="${fs}" font-weight="700" fill="#22495a">${t}</text>`;}}return s;};
+
+film.innerHTML=`<defs>
+  <linearGradient id="wallA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6e6"/><stop offset="1" stop-color="#ffe3bd"/></linearGradient>
+  <linearGradient id="wallB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf5ff"/><stop offset="1" stop-color="#cfe6fa"/></linearGradient>
+  <linearGradient id="wallC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1fbf7"/><stop offset="1" stop-color="#d3efe4"/></linearGradient>
+  <linearGradient id="wallD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf4ff"/><stop offset="1" stop-color="#ead9f7"/></linearGradient>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3ff"/><stop offset="1" stop-color="#d9f1ff"/></linearGradient>
+  <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9bf86"/><stop offset="1" stop-color="#c98f52"/></linearGradient>
+  <pattern id="tiles" width="48" height="48" patternUnits="userSpaceOnUse"><rect width="48" height="48" fill="#fff"/><path d="M0,0 H48 V48" fill="none" stroke="#e2d9cc" stroke-width="2"/></pattern>
+  <radialGradient id="shd"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <radialGradient id="skin" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffe6cf"/><stop offset="1" stop-color="#ffcda4"/></radialGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset=".25" stop-color="#fff" stop-opacity=".15"/><stop offset=".75" stop-color="#dff1f8" stop-opacity=".2"/><stop offset="1" stop-color="#bcdde9" stop-opacity=".7"/></linearGradient>
+  <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9edcff"/><stop offset="1" stop-color="#3f9fe0"/></linearGradient>
+  <linearGradient id="syrup" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f06a5c"/><stop offset="1" stop-color="#b52a22"/></linearGradient>
+  <linearGradient id="amber" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a3a0f"/><stop offset=".35" stop-color="#c8742c"/><stop offset="1" stop-color="#6b3008"/></linearGradient>
+  <linearGradient id="kettle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9e7a"/><stop offset="1" stop-color="#e2553a"/></linearGradient>
+  <clipPath id="cBaby"><rect x="372" y="176" width="136" height="240" rx="34"/></clipPath>
+  <clipPath id="cMed"><path d="M556,300 L676,300 L664,432 Q663,446 650,446 L582,446 Q569,446 568,432 Z"/></clipPath>
+  <clipPath id="cCup"><path d="M370,150 L590,150 L580,430 Q579,444 565,444 L395,444 Q381,444 380,430 Z"/></clipPath>
+  <clipPath id="cGlass"><path d="M612,330 L692,330 L684,440 Q683,450 673,450 L631,450 Q621,450 620,440 Z"/></clipPath>
+  <clipPath id="cBig"><path d="M-60,-90 Q-60,-120 -30,-130 L-20,-150 L-20,-178 L20,-178 L20,-150 L30,-130 Q60,-120 60,-90 L60,135 Q60,150 45,150 L-45,150 Q-60,150 -60,135 Z"/></clipPath>
+</defs>
+
+<!-- Cảnh 1: mẹ pha sữa cho em bé -->
+<g class="sc" id="sc0"><g id="kb0">
+  ${bg({wall:'wallA',top:418,win:[70,60,230,160]})}
+  <!-- em bé trên ghế ăn -->
+  <rect x="680" y="300" width="190" height="130" rx="26" fill="#f6c453"/><rect x="668" y="290" width="214" height="22" rx="11" fill="#e7a92f"/>
+  ${body(775,250,62,'#8ecdf5')}
+  ${face(775,250,62,'baby')}
+  <circle cx="712" cy="335" r="16" fill="url(#skin)"/><circle cx="838" cy="335" r="16" fill="url(#skin)"/>
+  <!-- bình sữa -->
+  ${shadow(440,420,90)}
+  <rect x="372" y="176" width="136" height="240" rx="34" fill="#fff" opacity=".75"/>
+  <rect id="s0w" x="360" width="160" fill="url(#water)" clip-path="url(#cBaby)"/>
+  <ellipse id="s0sf" cx="440" rx="66" ry="7" fill="#d4f0ff" opacity="0"/>
+  <g id="s0t">${ticks(382,404,1.4,30,150,30,30,v=>v===150?'150 ml':v,[16,30],19)}</g>
+  <rect x="372" y="176" width="136" height="240" rx="34" fill="url(#glass)" stroke="#9cc4d1" stroke-width="4"/>
+  <rect x="482" y="200" width="10" height="190" rx="5" fill="#fff" opacity=".7"/>
+  <path d="M470,330 c0,-10 14,-10 14,0 c0,-10 14,-10 14,0 c0,10 -14,18 -14,22 c0,-4 -14,-12 -14,-22z" fill="#ff8fab" opacity=".85"/>
+  <!-- cổ bình + miệng bình (lộ ra khi mở núm) -->
+  <rect x="398" y="152" width="84" height="30" rx="6" fill="#eaf6fb" stroke="#9cc4d1" stroke-width="4"/>
+  ${[160,168,176].map(y=>`<path d="M400,${y} Q440,${y+5} 480,${y}" fill="none" stroke="#9cc4d1" stroke-width="2.5"/>`).join('')}
+  <ellipse cx="440" cy="152" rx="42" ry="9" fill="#bfe3f5" stroke="#8fb7c4" stroke-width="4"/>
+  <ellipse cx="440" cy="153" rx="32" ry="5" fill="#7fbfe0" opacity=".6"/>
+  <g id="s0n">
+    <rect x="380" y="140" width="120" height="44" rx="12" fill="#7fc4e8" stroke="#4d9cc4" stroke-width="3"/>
+    ${[396,414,432,450,468,486].map(x=>`<line x1="${x}" y1="146" x2="${x}" y2="178" stroke="#5aa9d6" stroke-width="3"/>`).join('')}
+    <path d="M410,140 Q410,110 428,100 Q440,58 452,100 Q470,110 470,140 Z" fill="#f6d7a7" stroke="#d9a861" stroke-width="3"/>
+  </g>
+  <!-- ấm nước -->
+  <g id="s0s" data-rim="152" fill="#8fd3f5" opacity="0"><rect width="10" rx="5" opacity=".9"/><rect width="10" rx="5" opacity=".35"/></g>
+  <g id="s0k">
+    <path d="M-30,-48 Q0,-98 30,-48" stroke="#5b3a2b" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M-55,8 Q-80,0 -92,-24 L-82,-30 Q-70,-12 -48,-10 Z" fill="#e2553a"/>
+    <path d="M-62,40 Q-72,-40 0,-50 Q72,-40 62,40 Q56,60 0,62 Q-56,60 -62,40 Z" fill="url(#kettle)" stroke="#c4432b" stroke-width="3"/>
+    <ellipse cx="0" cy="-48" rx="36" ry="9" fill="#c4432b"/><circle cx="0" cy="-60" r="9" fill="#5b3a2b"/>
+    <path d="M-36,-20 Q-40,10 -30,34" stroke="#fff" stroke-width="7" fill="none" opacity=".5" stroke-linecap="round"/>
+  </g>
+  <g id="s0h" opacity="0"><ellipse cx="428" rx="56" ry="24" fill="none" stroke="#f3a712" stroke-width="5"/></g>
+</g></g>
+
+<!-- Cảnh 2: uống thuốc siro -->
+<g class="sc" id="sc1"><g id="kb1">
+  ${bg({wall:'wallB',top:448,deco:`
+    <rect x="620" y="70" width="150" height="110" rx="8" fill="#fff" stroke="#d8c3a5" stroke-width="8"/><path d="M640,160 l35,-45 l25,30 l18,-20 l32,35z" fill="#9fd88a"/><circle cx="735" cy="100" r="13" fill="#ffd23f"/>`})}
+  <!-- bạn nhỏ bị ho -->
+  <!-- ghế bành phía sau -->
+  <path d="M58,448 V300 Q58,262 100,262 L240,262 Q282,262 282,300 V448 Z" fill="#f4a97a"/>
+  <path d="M74,440 V306 Q74,280 104,280 L236,280 Q266,280 266,306 V440" fill="none" stroke="#e08b5c" stroke-width="5"/>
+  <rect x="30" y="368" width="54" height="80" rx="22" fill="#e9915f"/><rect x="256" y="368" width="54" height="80" rx="22" fill="#e9915f"/>
+  <!-- áo + tay áo -->
+  <path d="M96,452 Q92,404 128,392 L212,392 Q248,404 244,452 Z" fill="#b9a2ef"/>
+  <path d="M106,404 Q86,420 96,452 L132,452 Q128,428 138,410 Z" fill="#a58de0"/>
+  <path d="M234,404 Q254,420 244,452 L208,452 Q212,428 202,410 Z" fill="#a58de0"/>
+  <!-- khăn quàng (bị ho) -->
+  <path d="M128,386 Q170,410 212,386 L216,402 Q170,430 124,402 Z" fill="#ff8a65"/>
+  <path d="M190,404 l10,40 l18,-4 l-8,-38 z" fill="#ff7043"/>
+  <!-- mép bàn che phần dưới -->
+  <rect y="448" width="960" height="92" fill="url(#wood)"/><rect y="448" width="960" height="10" fill="#fff" opacity=".35"/>
+  <g stroke="#b9895a" stroke-width="2" opacity=".35" fill="none"><path d="M0,488 q240,-10 480,0 t480,0"/><path d="M0,523 q300,8 600,-2 t360,4"/></g>
+  <!-- hai bàn tay đặt trên bàn -->
+  <ellipse cx="116" cy="454" rx="20" ry="13" fill="url(#skin)" stroke="#f0b98d" stroke-width="2"/>
+  <ellipse cx="224" cy="454" rx="20" ry="13" fill="url(#skin)" stroke="#f0b98d" stroke-width="2"/>
+  ${face(170,330,64,'sick')}
+  <!-- cốc đong -->
+  ${shadow(616,448,80)}
+  <path d="M556,300 L676,300 L664,432 Q663,446 650,446 L582,446 Q569,446 568,432 Z" fill="#fff" opacity=".8"/>
+  <rect id="s1w" x="550" width="140" fill="url(#syrup)" clip-path="url(#cMed)"/>
+  <g>${ticks(568,432,4.2,5,25,5,5,v=>v===25?'':v+' ml',[14,22],17)}</g>
+  <path d="M556,300 L676,300 L664,432 Q663,446 650,446 L582,446 Q569,446 568,432 Z" fill="url(#glass)" stroke="#9cc4d1" stroke-width="4"/>
+  <ellipse cx="616" cy="300" rx="60" ry="7" fill="none" stroke="#9cc4d1" stroke-width="3"/>
+  <!-- chai siro -->
+  <g id="s1s" data-rim="300" fill="#d0473d" opacity="0"><rect width="8" rx="4" opacity=".9"/><rect width="8" rx="4" opacity=".35"/></g>
+  <g id="s1b">
+    ${shadow(0,104,70)}
+    <rect x="-55" y="-100" width="110" height="200" rx="20" fill="url(#amber)" stroke="#5e300f" stroke-width="3"/>
+    <rect x="-24" y="-136" width="48" height="40" fill="url(#amber)" stroke="#5e300f" stroke-width="3"/>
+    <rect x="-33" y="-164" width="66" height="32" rx="6" fill="#f7f7f7" stroke="#bbb" stroke-width="2"/>
+    ${[-24,-12,0,12,24].map(x=>`<line x1="${x}" y1="-160" x2="${x}" y2="-136" stroke="#d0d0d0" stroke-width="2"/>`).join('')}
+    <rect x="-45" y="-46" width="90" height="86" rx="10" fill="#fff"/>
+    <rect x="-8" y="-38" width="16" height="36" rx="3" fill="#e74c3c"/><rect x="-18" y="-28" width="36" height="16" rx="3" fill="#e74c3c"/>
+    <text x="0" y="24" text-anchor="middle" font-size="20" font-weight="800" fill="#5e300f">SIRO</text>
+    <rect x="-44" y="-90" width="10" height="150" rx="5" fill="#fff" opacity=".25"/>
+  </g>
+  <g id="s1h" opacity="0"><circle cx="575" cy="411" r="22" fill="none" stroke="#f3a712" stroke-width="5"/>${sparkle(540,392,.9)}</g>
+</g></g>
+
+<!-- Cảnh 3: cốc chia vạch -->
+<g class="sc" id="sc2"><g id="kb2">
+  ${bg({wall:'wallC',top:448})}
+  ${shadow(480,448,140)}
+  <path d="M588,190 C686,190 686,382 584,380" fill="none" stroke="#c6dde4" stroke-width="22" stroke-linecap="round"/>
+  <path d="M341,137 Q373,149 409,150 L590,150 L580,430 Q579,444 565,444 L395,444 Q381,444 380,430 L371,178 Q364,159 341,137 Z" fill="#fff" opacity=".75"/>
+  <rect id="s2w" x="360" width="240" fill="url(#water)" clip-path="url(#cCup)"/>
+  <ellipse id="s2sf" cx="480" rx="104" ry="8" fill="#d4f0ff" opacity="0"/>
+  <g id="s2bub" clip-path="url(#cCup)">${[[420,0],[470,1.1],[530,.5],[505,1.7],[445,2.3]].map(([x,o],i)=>`<circle data-o="${o}" cx="${x}" cy="440" r="${4+i%3*2}" fill="#fff" opacity="0"/>`).join('')}</g>
+  <g>${ticks(392,430,1.04,10,250,10,50,v=>v,[16,34],21)}</g>
+  <text x="482" y="177" font-size="21" font-weight="800" fill="#22495a">ml</text>
+  <path d="M341,137 Q373,149 409,150 L590,150 L580,430 Q579,444 565,444 L395,444 Q381,444 380,430 L371,178 Q364,159 341,137 Z" fill="url(#glass)" stroke="#9cc4d1" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M341,137 Q373,149 409,150 L596,150" fill="none" stroke="#9cc4d1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="556" y="170" width="12" height="240" rx="6" fill="#fff" opacity=".6"/>
+  <!-- bình rót -->
+  <g id="s2s" data-rim="150" fill="#8fd3f5" opacity="0"><rect width="11" rx="5.5" opacity=".9"/><rect width="11" rx="5.5" opacity=".35"/></g>
+  <g id="s2p">
+    <path d="M50,-50 C92,-50 92,40 54,40" fill="none" stroke="#8fb7c4" stroke-width="12" stroke-linecap="round"/>
+    <path d="M-64,-77 Q-48,-71 -30,-70 L50,-70 L58,70 Q58,80 48,80 L-48,80 Q-58,80 -58,70 L-51,-54 Q-55,-65 -64,-77 Z" fill="#eaf6fb" opacity=".9"/>
+    <path d="M-53,-20 L53,-20 L58,70 Q58,80 48,80 L-48,80 Q-58,80 -58,70 Z" fill="url(#water)"/>
+    <path d="M-64,-77 Q-48,-71 -30,-70 L50,-70 L58,70 Q58,80 48,80 L-48,80 Q-58,80 -58,70 L-51,-54 Q-55,-65 -64,-77 Z" fill="url(#glass)" stroke="#8fb7c4" stroke-width="4" stroke-linejoin="round"/><path d="M-64,-77 Q-48,-71 -30,-70 L52,-70" fill="none" stroke="#8fb7c4" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g id="s2h" opacity="0"><circle cx="452" cy="222" r="30" fill="none" stroke="#f3a712" stroke-width="5"/>${sparkle(412,196,1)}${sparkle(496,198,.7)}</g>
+</g></g>
+
+<!-- Cảnh 4: 1 lít và ít hơn 1 lít -->
+<g class="sc" id="sc3"><g id="kb3">
+  ${bg({wall:'wallD',top:448,win:[70,70,180,130]})}
+  <!-- bạn nhỏ suy nghĩ -->
+  ${body(820,330,62,'#7fd1ae')}
+  ${face(820,330,62,'think')}
+  <circle cx="852" cy="384" r="15" fill="url(#skin)"/>
+  <rect y="448" width="960" height="92" fill="url(#wood)"/><rect y="448" width="960" height="10" fill="#fff" opacity=".35"/>
+  ${shadow(652,452,60)}
+  <path d="M612,330 L692,330 L684,440 Q683,450 673,450 L631,450 Q621,450 620,440 Z" fill="#fff" opacity=".8"/>
+  <rect id="s3w" x="600" width="100" fill="url(#water)" clip-path="url(#cGlass)"/>
+  <path d="M612,330 L692,330 L684,440 Q683,450 673,450 L631,450 Q621,450 620,440 Z" fill="url(#glass)" stroke="#9cc4d1" stroke-width="4"/>
+  <ellipse cx="652" cy="330" rx="40" ry="5" fill="none" stroke="#9cc4d1" stroke-width="3"/>
+  <!-- chai 1 l -->
+  <g id="s3s" data-rim="330" fill="#8fd3f5" opacity="0"><rect width="9" rx="4.5" opacity=".9"/><rect width="9" rx="4.5" opacity=".35"/></g>
+  <g id="s3b">
+    ${shadow(0,152,80)}
+    <path d="M-60,-90 Q-60,-120 -30,-130 L-20,-150 L-20,-178 L20,-178 L20,-150 L30,-130 Q60,-120 60,-90 L60,135 Q60,150 45,150 L-45,150 Q-60,150 -60,135 Z" fill="#fff" opacity=".7"/>
+    <rect x="-70" y="-110" width="140" height="270" fill="url(#water)" clip-path="url(#cBig)"/>
+    <path d="M-60,-90 Q-60,-120 -30,-130 L-20,-150 L-20,-178 L20,-178 L20,-150 L30,-130 Q60,-120 60,-90 L60,135 Q60,150 45,150 L-45,150 Q-60,150 -60,135 Z" fill="url(#glass)" stroke="#6fb1d6" stroke-width="4"/>
+    ${[-60,-20,100].map(y=>`<path d="M-60,${y} Q0,${y+10} 60,${y}" fill="none" stroke="#bfe3f5" stroke-width="3" opacity=".8"/>`).join('')}
+    <rect x="-24" y="-202" width="48" height="28" rx="7" fill="#2f8fd6"/>
+    <rect x="-46" y="-6" width="92" height="64" rx="12" fill="#fff" stroke="#f3c64f" stroke-width="4"/>
+    <text x="0" y="38" text-anchor="middle" font-size="36" font-weight="800" fill="#b07a00">1 l</text>
+    <rect x="-48" y="-80" width="10" height="200" rx="5" fill="#fff" opacity=".45"/>
+  </g>
+  <g id="s3q" opacity="0">
+    <circle cx="742" cy="258" r="8" fill="#fff" stroke="#f3c64f" stroke-width="3"/><circle cx="726" cy="236" r="12" fill="#fff" stroke="#f3c64f" stroke-width="3"/>
+    <rect x="590" y="96" width="270" height="118" rx="30" fill="#fff" stroke="#f3c64f" stroke-width="4"/>
+    <text x="725" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#0f3f3d">Ít hơn 1 l</text>
+    <text x="725" y="188" text-anchor="middle" font-size="30" font-weight="800" fill="#d6382f">đo bằng … ?</text>
+  </g>
+  <text id="s3m" x="470" y="230" text-anchor="middle" font-size="130" font-weight="800" fill="#f3a712" stroke="#fff" stroke-width="5" paint-order="stroke" opacity="0" class="pulse">?</text>
+</g></g>`;
+const E=id=>document.getElementById(id);
+function setLevel(r,bot,h){r.setAttribute('y',bot-h);r.setAttribute('height',h+4);}
+/* toạ độ miệng (local mx,my) của vật khi đặt ở (tx,ty) và xoay r độ */
+const tip=(mx,my,tx,ty,r)=>{const a=r*Math.PI/180;return[tx+mx*Math.cos(a)-my*Math.sin(a),ty+mx*Math.sin(a)+my*Math.cos(a)];};
+const stream=(g,x,y1,y2,on)=>{const rim=+g.dataset.rim,m=Math.max(y1,Math.min(y2,rim));[[g.children[0],y1,m],[g.children[1],m,y2]].forEach(([r,a,b])=>{r.setAttribute('x',x-r.getAttribute('width')/2);r.setAttribute('y',a);r.setAttribute('height',Math.max(0,b-a));});g.setAttribute('opacity',on?1:0);};
+function render(t){
+  const s=Math.min(3,Math.floor(t/SC)),lt=t-s*SC;
+  for(let i=0;i<4;i++)E('sc'+i).classList.toggle('on',i===s);
+  const kb=1+0.045*clamp(lt/SC);E('kb'+s).setAttribute('transform',`translate(480 270) scale(${kb}) translate(-480 -270)`);
+  // cảnh 1: mở núm, rót nước từ ấm tới vạch 120
+  { const lift=clamp((t-7.6)/0.7)-clamp((t-13.6)/0.7);
+    E('s0n').setAttribute('transform',`translate(${-150*lift} ${-40*lift}) rotate(${-25*lift} 440 160)`);E('s0n').setAttribute('opacity',1-lift*.25);
+    const ki=clamp((t-8.2)/0.8)-clamp((t-13.4)/0.8),R=-32*ki,TX=lerp(1060,538,ki),TY=95;
+    E('s0k').setAttribute('transform',`translate(${TX} ${TY}) rotate(${R})`);
+    const k=clamp((t-9)/4),lvl=120*1.4*k,sf=404-lvl;setLevel(E('s0w'),416,12+lvl);
+    E('s0sf').setAttribute('cy',sf-6);E('s0sf').setAttribute('opacity',k>0?.8:0);
+    const [px,py]=tip(-90,-27,TX,TY,R);stream(E('s0s'),px,py,sf-6,t>=9&&t<13);
+    E('s0h').setAttribute('opacity',t>=13.2&&t<15?1:0);E('s0h').firstChild.setAttribute('cy',404-120*1.4);
+    E('s0t').setAttribute('opacity',t>=4.5&&t<9?(Math.sin(t*6)>0?1:.55):1); }
+  // cảnh 2: rót siro tới vạch 5 ml
+  { const tilt=clamp((t-21.5)/0.8)-clamp((t-27)/0.8),x=lerp(380,740,tilt),y=lerp(350,190,tilt),r=lerp(0,-112,tilt);
+    E('s1b').setAttribute('transform',`translate(${x} ${y}) rotate(${r})`);
+    const k=clamp((t-22.6)/3),sf=432-5*4.2*k;setLevel(E('s1w'),446,14+5*4.2*k);
+    const [px,py]=tip(0,-164,x,y,r);stream(E('s1s'),px,py,sf,t>=22.6&&t<25.6);
+    E('s1h').setAttribute('opacity',t>=25.6&&t<30?1:0); }
+  // cảnh 3: rót nước từ bình, nước dâng tới vạch 200
+  { const pi=clamp((t-38.4)/0.9)-clamp((t-43.6)/0.9),R=-50*pi,TX=lerp(1080,624,pi),TY=63;
+    E('s2p').setAttribute('transform',`translate(${TX} ${TY}) rotate(${R})`);
+    const k=clamp((t-39.5)/4),lvl=200*1.04*k,sf=430-lvl;setLevel(E('s2w'),444,14+lvl);
+    E('s2sf').setAttribute('cy',sf-4);E('s2sf').setAttribute('opacity',k>0?.75:0);
+    const [px,py]=tip(-64,-77,TX,TY,R);stream(E('s2s'),px,py,sf-4,t>=39.5&&t<43.5);
+    [...E('s2bub').children].forEach(c=>{const ph=((t*0.9+ +c.dataset.o)%2.4)/2.4,on=k>0&&t<45;c.setAttribute('cy',440-ph*(440-sf));c.setAttribute('opacity',on?.7*(1-ph):0);});
+    E('s2h').setAttribute('opacity',t>=43.5&&t<45?1:0);E('s2h').firstChild.setAttribute('cy',430-200*1.04); }
+  // cảnh 4: chai 1 l rót ra cốc nhỏ, câu hỏi
+  { const tilt=clamp((t-49)/0.8)-clamp((t-53)/0.8),TX=lerp(300,477,tilt),TY=lerp(298,269,tilt),R=lerp(0,100,tilt);
+    E('s3b').setAttribute('transform',`translate(${TX} ${TY}) rotate(${R})`);
+    const k=clamp((t-49.8)/2.6),sf=440-70*k;setLevel(E('s3w'),450,10+70*k);
+    const [px,py]=tip(0,-178,TX,TY,R);stream(E('s3s'),px,py,sf,t>=49.8&&t<52.4);
+    E('s3q').setAttribute('opacity',t>=52?1:0);E('s3m').setAttribute('opacity',t>=54.5?1:0); }
+}
+/* trình phát */
+let T=0,playing=false,last=0,raf=0,cueIdx=-1,ended=false;
+const fmt=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
+function paint(){
+  render(T);$('fill').style.width=T/DUR*100+'%';$('time').textContent=`${fmt(T)} / ${fmt(DUR)}`;
+  let k=-1;CUES.forEach((c,j)=>{if(T>=c[0])k=j;});
+  if(k!==cueIdx){cueIdx=k;$('sub').textContent=k>=0?CUES[k][2]:'';if(playing&&k>=0)playVoice(CUES[k][1]);}
+}
+function tick(now){if(!playing)return;T+=(now-last)/1000;last=now;
+  if(T>=DUR){T=DUR;paint();pause();finish();return;}
+  if(T>=DUR-2)showQ();
+  paint();raf=requestAnimationFrame(tick);}
+function play(){if(T>=DUR){seek(0);}hideQ();playing=true;last=performance.now();$('pp').textContent='❚❚';$('startOv').hidden=true;
+  if(!voice.src||voice.muted)cueIdx=-2;else if(cueIdx>=0&&voice.paused&&!voice.ended)voice.play().catch(()=>{});raf=requestAnimationFrame(tick);}
+function pause(){playing=false;cancelAnimationFrame(raf);$('pp').textContent='▶';voice.pause();}
+function seek(t){T=clamp(t,0,DUR);cueIdx=-2;stopVoice();if(T<DUR-2.2)hideQ();paint();}
+function showQ(){$('vq').hidden=false;}
+function hideQ(){$('vq').hidden=true;}
+function finish(){showQ();doneSet.add(0);renderSteps();}
+$('pp').onclick=()=>{audio.click();playing?pause():play();};
+$('rw').onclick=()=>{seek(0);play();};
+$('startOv').onclick=()=>play();
+$('bar').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();seek((e.clientX-r.left)/r.width*DUR);};
+$('vqGo').onclick=()=>{audio.click();go(1);playVoice('2.1');};
+$('vqReplay').onclick=()=>{seek(0);play();};
+paint();
+
+/* ===== hỏi đáp ===== */
+$('qimg').innerHTML=`<svg viewBox="0 0 220 170" width="190" height="146" aria-label="Cốc có chia vạch">
+  <path d="M150,40 C188,40 188,130 148,128" fill="none" stroke="#c6dde4" stroke-width="12" stroke-linecap="round"/>
+  <path d="M50,20 L152,20 L147,152 Q146,160 138,160 L64,160 Q56,160 55,152 Z" fill="#eaf6fb" stroke="#9cc4d1" stroke-width="3"/>
+  ${ticks(60,152,0.5,10,250,10,50,v=>v,[8,16],12)}<text x="84" y="16" font-size="12" font-weight="800" fill="#22495a">ml</text></svg>`;
+const OPTS=[
+  {id:'a',ic:'📏',t:'Đo nước cho đúng',ok:true},
+  {id:'b',ic:'🥤',t:'Biết cốc có bao nhiêu nước',ok:true},
+  {id:'c',ic:'🎨',t:'Cho cốc đẹp hơn',ok:false},
+  {id:'d',ic:'🔢',t:'Đếm số cốc',ok:false}
+];
+const picked=new Set();
+const cardsEl=$('cards');
+OPTS.forEach(o=>{
+  const b=document.createElement('button');b.type='button';b.className='card';b.setAttribute('aria-pressed','false');
+  b.innerHTML='<span class="ic">'+o.ic+'</span><span>'+o.t+'</span><span class="ck">✓</span>';
+  b.onclick=()=>{audio.click();picked.has(o.id)?picked.delete(o.id):picked.add(o.id);b.setAttribute('aria-pressed',picked.has(o.id));upd()};
+  cardsEl.appendChild(b)});
+const own=$('own');
+function upd(){$('btnSend').disabled=!(picked.size||own.value.trim())}
+own.addEventListener('input',upd);
+$('btnSend').onclick=()=>{
+  audio.ok();playVoice('2.2');
+  const chosen=OPTS.filter(o=>picked.has(o.id)),txt=own.value.trim();
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let h='<div class="mine">'+chosen.map(o=>'<span>'+o.ic+' '+o.t+'</span>').join('')+(txt?'<span>✏️ '+esc(txt)+'</span>':'')+'</div>';
+  if(picked.has('c')||picked.has('d'))h+='<div class="note">Vạch chia giúp biết <b>lượng nước</b> đấy!</div>';
+  h+='<p style="font-size:19px;margin:6px 0">📏 Vạch chia giúp <b>đo nước</b>.</p><p style="font-size:19px;margin:6px 0">Đơn vị: <b>ml</b> – mi-li-lít</p>';
+  h+='<div style="font-size:18px">Cùng học <b>Mi-li-lít</b> nhé! 🔍</div><div class="go"><button class="btn" id="btnLesson" type="button">Vào bài học ▶</button></div>';
+  const fb=$('fb');fb.innerHTML=h;fb.hidden=false;fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  $('btnSend').disabled=true;doneSet.add(1);renderSteps();
+  $('btnLesson').onclick=()=>{
+    audio.click();
+    try{parent.postMessage({type:'yoobook:next',from:'khoi-dong'},'*')}catch(e){}
+    toast('Vào bài học!');
+  };
+};
+
+/* ===== điều khiển chung ===== */
+(()=>{let w=0;const b=$('introBar');const iv=setInterval(()=>{w=Math.min(100,w+14);b.style.width=w+'%';
+  if(w>=100){clearInterval(iv);$('introStatus').innerHTML='<span class="ready-dot"></span>Đã sẵn sàng!';$('intro').classList.add('ready');}},110);})();
+$('btnBegin').onclick=()=>{audio.click();unlockVoice();const i=$('intro');i.classList.add('gone');setTimeout(()=>i.style.display='none',420);setTimeout(play,450)};
+$('btnMute').onclick=e=>{muted=!muted;e.currentTarget.textContent=muted?'🔇':'🔊';e.currentTarget.setAttribute('aria-pressed',muted);if(muted)stopVoice()};
+$('btnFs').onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}};
+window.__lesson={goTo:go,seek,play};
+renderSteps();$('btnPrev').disabled=true;
+</script>
+</body>
+</html>
