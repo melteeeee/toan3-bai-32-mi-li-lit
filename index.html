@@ -79,25 +79,26 @@ button{font-family:inherit}
 .toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%) translateY(10px);z-index:40;background:rgba(15,63,61,.94);color:#fff;border-radius:99px;padding:9px 16px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* intro (như template) */
-.intro-loader{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#2f827d 0,#195856 55%,#0b2a29 100%);transition:opacity .4s}
+/* intro (như template các phần) */
+.intro-loader{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;background:radial-gradient(80% 70% at 50% 40%,#2f827d 0,#195856 58%,#0b2a29 100%);transition:opacity .45s}
 .intro-loader.gone{opacity:0;pointer-events:none}
-.intro-loader::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.22) 56%,rgba(0,0,0,.42));pointer-events:none}
-.intro-loader__inner{position:relative;z-index:1;width:100%;max-width:920px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
-.intro-card{width:min(92vw,980px);padding:8px 12px 12px;text-align:center}
-.intro-kicker{font-size:12px;font-weight:700;letter-spacing:.20em;text-transform:uppercase;color:rgba(248,252,252,.92)}
-.intro-card h1{font-size:clamp(32px,5vw,66px);margin:10px 0 12px;color:#fff;line-height:1.08;font-weight:800;text-shadow:0 4px 18px rgba(0,0,0,.26)}
-.intro-sub{max-width:720px;margin:0 auto 22px;font-size:clamp(13px,1.8vw,22px);color:rgba(244,249,249,.96);line-height:1.72;text-shadow:0 2px 10px rgba(0,0,0,.22)}
-.intro-explore{width:min(280px,88vw);padding:14px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.16);cursor:pointer;background:rgba(21,92,88,.76);color:#fff;font-weight:700;font-size:15px;letter-spacing:.02em;box-shadow:0 16px 42px -20px rgba(0,0,0,.6)}
-.intro-explore:hover{background:rgba(21,92,88,.9)}
-.intro-credit{color:rgba(255,255,255,.88);font-size:12px;text-shadow:0 2px 8px rgba(0,0,0,.24)}
+.intro-inner{position:relative;z-index:2;width:min(760px,92vw);display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff}
+.intro-kicker{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#d6e78c}
+.intro-inner h1{font-size:clamp(30px,4.6vw,50px);margin:10px 0 12px;line-height:1.14;font-weight:800;letter-spacing:-.02em;text-shadow:0 4px 18px rgba(0,0,0,.4)}
+.intro-sub{max-width:680px;margin:0 auto 30px;font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.93)}
+.intro-progress{width:min(410px,72vw);height:3px;margin:0 auto 14px;border-radius:99px;background:rgba(255,255,255,.36);overflow:hidden}
+.intro-progress span{display:block;height:100%;width:8%;background:#d8ff64;box-shadow:0 0 12px rgba(216,255,100,.5);transition:width .3s linear}
+#introStatus{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.ready-dot{width:8px;height:8px;border-radius:99px;background:#d8ff64;display:inline-block;margin-right:7px;box-shadow:0 0 10px rgba(216,255,100,.65)}
+.intro-explore{margin:20px auto 0;min-width:210px;padding:12px 20px;border-radius:10px;border:1px solid rgba(255,255,255,.34);cursor:pointer;background:rgba(25,88,86,.82);color:#fff;font-weight:700;font-size:14px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .28s,transform .28s,background .2s}
+.intro-loader.ready .intro-explore{opacity:1;transform:none;pointer-events:auto}
+.intro-explore:hover{background:rgba(47,130,125,.96)}
+.intro-credit{margin-top:30px;color:rgba(255,255,255,.86);font-size:12px}
 
 @media (max-width:920px){.main{padding:10px}}
 @media (max-width:620px){
   .badge{display:none}
   .titles h1{font-size:15px}
-  .intro-card h1{font-size:42px}
-  .intro-sub{font-size:14px;line-height:1.65}
 }
 @media (max-height:480px){
   .topbar{padding:4px 12px}.logoclip,.logoclip .logo{height:22px}.badge{display:none}.titles h1{font-size:15px}
@@ -109,16 +110,18 @@ button{font-family:inherit}
 <body>
 
 <div class="intro-loader" id="introLoader">
-  <div class="intro-loader__inner">
-    <section class="intro-card" aria-labelledby="introTitle">
-      <div class="intro-kicker">Toán 3</div>
-      <h1 id="introTitle">Mi-li-lít</h1>
-      <p class="intro-sub">Cùng rót nước, đếm vạch và pha chế nhé! 🫗</p>
-      <button class="intro-explore" id="btnExplore" type="button">Bắt đầu khám phá</button>
-    </section>
+  <div class="intro-inner">
+    <div class="intro-kicker">Toán 3 · Bài 32</div>
+    <h1 id="introTitle">Mi-li-lít</h1>
+    <p class="intro-sub">Cùng rót nước, đếm vạch và pha chế nhé! 🫗</p>
+    <div class="intro-progress"><span id="introBar"></span></div>
+    <div id="introStatus"><span class="ready-dot"></span>Đang chuẩn bị bài học…</div>
+    <button class="intro-explore" id="btnExplore" type="button">Bắt đầu khám phá</button>
     <div class="intro-credit">Được phát triển bởi <strong>YooBook</strong></div>
   </div>
 </div>
+<script>(function(){let w=8;const b=document.getElementById('introBar');const t=setInterval(()=>{w=Math.min(85,w+12);b.style.width=w+'%';},120);
+setTimeout(()=>{clearInterval(t);b.style.width='100%';document.getElementById('introStatus').innerHTML='<span class="ready-dot"></span>Đã sẵn sàng!';document.getElementById('introLoader').classList.add('ready');},700);})();</script>
 
 <div class="app">
   <header class="topbar">
